@@ -8,7 +8,9 @@ app.use(cors());
 app.get('/', (req: Request, res: Response) => {
   res
     .status(200)
-    .send('<h3 align="center">Advanced CRUD Mastery Server Is Running</h3>');
+    .send(
+      '<h3 align="center" style="color:#333">Advanced CRUD Mastery Server Is Running</h3>',
+    );
 });
 
 export default app;
