@@ -4,6 +4,7 @@ import { userService } from './userService';
 const createUser = async (req: Request, res: Response) => {
   try {
     const { user: userData } = req.body;
+
     const result = await userService.createUserIntoDB(userData);
     res.status(200).json({
       success: true,
@@ -11,13 +12,13 @@ const createUser = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    // console.log(`Something went wrong: ${error}`);
+    console.log(`Something went wrong: ${error}`);
     res.status(404).json({
       success: false,
-      message: 'User not found',
+      message: 'User not created !',
       error: {
         code: 404,
-        description: 'User not found!',
+        description: 'User not created !',
       },
     });
   }
