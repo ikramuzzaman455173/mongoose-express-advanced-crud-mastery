@@ -1,48 +1,208 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
-import { userService } from './userService';
-import UserValidationSchema from './user.validation';
+import {
+  addOrder,
+  calculateTotalPrice,
+  createUser,
+  deleteUser,
+  getAllUsers,
+  getOrders,
+  getUserById,
+  updateUser,
+} from './userService';
+import userValidation from './user.validation';
 
-// createUser controller
-const createUser = async (req: Request, res: Response) => {
+export const createUsers = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
-    const { user: userData } = req.body;
-    // userData validation in ZOD
-    const zodParseData = UserValidationSchema.parse(userData);
-    const result = await userService.createUserIntoDB(zodParseData);
-    res.status(200).json({
+    const user = req.body;
+    if (!Array.isArray(user.hobbies)) {
+      user.hobbies = [user.hobbies];
+    }
+    const validatedUser = userValidation.parse(user);
+    const newUser = await createUser(validatedUser);
+    res.status(201).json({
       success: true,
       message: 'User created successfully!',
-      data: result,
+      data: newUser,
     });
-  } catch (error) {
-    // console.log(`Something went wrong: ${error}`);
-    res.status(404).json({
+  } catch (error: any) {
+    res.status(400).json({
       success: false,
-      // message: error.message || 'Something went to wrong!',
-      message: 'Something went to wrong!',
-      error: error,
+      message: 'Failed to create user!',
+      error: {
+        code: 400,
+        description: error,
+      },
     });
   }
 };
 
-// get allUser controller
-const getAllUsers = async (req: Request, res: Response) => {
+export const getUsersController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
-    const result = await userService.getAllUsersIntoDB();
+    const users = await getAllUsers();
     res.status(200).json({
       success: true,
-      message: 'Retrieve a list of all users successfully!',
-      data: result,
+      message: 'Users fetched successfully!',
+      data: users,
     });
-  } catch (error) {
-    // console.log(`Something went wrong: ${error}`);
-    res.status(404).json({
+  } catch (error: any) {
+    res.status(400).json({
       success: false,
-      // message: error.message || 'Something went to wrong!',
-      message: 'Something went to wrong!',
-      error: error,
+      message: 'Failed to fetch users!',
+      error: {
+        code: 400,
+        description: error.message,
+      },
     });
   }
 };
 
-export const userController = { createUser, getAllUsers };
+export const userByIdController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { userId } = req.params;
+    const user = await getUserById(userId);
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully!',
+      data: user,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: 'Failed to fetch user!',
+      error: {
+        code: 400,
+        description: error.message,
+      },
+    });
+  }
+};
+
+export const updateAUser = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { userId } = req.params;
+    const userData = req.body;
+    const validatedUser = userValidation.parse(userData);
+    const updatedUser = await updateUser(userId, validatedUser);
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: updatedUser,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: 'Failed to fetch user!',
+      error: {
+        code: 400,
+        description: error.message,
+      },
+    });
+  }
+};
+
+export const deleteSingleUser = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { userId } = req.params;
+    await deleteUser(userId);
+    res.status(200).json({
+      success: true,
+      message: 'User deleted successfully!',
+      data: null,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: 'Failed to fetch user!',
+      error: {
+        code: 400,
+        description: error.message,
+      },
+    });
+  }
+};
+export const addOrders = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId } = req.params;
+    const orderData = req.body;
+    await addOrder(userId, orderData);
+    res.status(200).json({
+      success: true,
+      message: 'Order added successfully!',
+      data: null,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: 'Failed to add order!',
+      error: {
+        code: 400,
+        description: error.message,
+      },
+    });
+  }
+};
+export const getOrdersOfUsers = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { userId } = req.params;
+    const orders = await getOrders(userId);
+    res.status(200).json({
+      success: true,
+      message: 'Orders fetched successfully!',
+      data: { orders },
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: 'Failed to fetch orders!',
+      error: {
+        code: 400,
+        description: error.message,
+      },
+    });
+  }
+};
+
+export const calculatePrice = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { userId } = req.params;
+    const totalPrice = await calculateTotalPrice(userId);
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: {
+        totalPrice: totalPrice.toFixed(2),
+      },
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: 'Failed to calculate total price!',
+      error: {
+        code: 400,
+        description: error.message,
+      },
+    });
+  }
+};
