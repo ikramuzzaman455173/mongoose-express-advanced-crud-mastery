@@ -57,7 +57,7 @@ export const getUsersController = async (
       message: 'Failed to fetch users!',
       error: {
         code: 400,
-        description: error.message,
+        description: error,
       },
     });
   }
@@ -81,7 +81,7 @@ export const userByIdController = async (
       message: 'Failed to fetch user!',
       error: {
         code: 400,
-        description: error.message,
+        description: error,
       },
     });
   }
@@ -107,7 +107,7 @@ export const updateAUser = async (
       message: 'Failed to fetch user!',
       error: {
         code: 400,
-        description: error.message,
+        description: error,
       },
     });
   }
@@ -131,7 +131,7 @@ export const deleteSingleUser = async (
       message: 'Failed to fetch user!',
       error: {
         code: 400,
-        description: error.message,
+        description: error,
       },
     });
   }
@@ -152,7 +152,7 @@ export const addOrders = async (req: Request, res: Response): Promise<void> => {
       message: 'Failed to add order!',
       error: {
         code: 400,
-        description: error.message,
+        description: error,
       },
     });
   }
@@ -175,7 +175,7 @@ export const getOrdersOfUsers = async (
       message: 'Failed to fetch orders!',
       error: {
         code: 400,
-        description: error.message,
+        description: error,
       },
     });
   }
@@ -201,7 +201,7 @@ export const calculatePrice = async (
       message: 'Failed to calculate total price!',
       error: {
         code: 400,
-        description: error.message,
+        description: error,
       },
     });
   }
