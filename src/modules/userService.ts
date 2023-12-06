@@ -1,17 +1,17 @@
 import { TUser, TOrder } from './user.interfase';
 import { User } from './user.model';
 
-export async function createUser(userData: TUser): Promise<TUser> {
+export const createUser = async (userData: TUser): Promise<TUser> => {
   const newUser = await User.create(userData);
   return newUser;
-}
+};
 
-export async function getAllUsers(): Promise<TUser[]> {
+export const getAllUsers = async (): Promise<TUser[]> => {
   const users = await User.find();
   return users;
-}
+};
 
-export async function getUserById(userId: string): Promise<TUser | null> {
+export const getUserById = async (userId: string): Promise<TUser | null> => {
   const userIdNumber = Number(userId);
 
   const existingUser = await User.isUserExist(userIdNumber);
@@ -22,12 +22,12 @@ export async function getUserById(userId: string): Promise<TUser | null> {
     const user = await User.findOne({ userId: userId }).select('-orders');
     return user;
   }
-}
+};
 
-export async function updateUser(
+export const updateUser = async (
   userId: string,
   userData: TUser,
-): Promise<TUser | null> {
+): Promise<TUser | null> => {
   const userIdNumber = Number(userId);
 
   const existingUser = await User.isUserExist(userIdNumber);
@@ -42,9 +42,9 @@ export async function updateUser(
     );
     return updatedUser;
   }
-}
+};
 
-export async function deleteUser(userId: string): Promise<TUser | null> {
+export const deleteUser = async (userId: string): Promise<TUser | null> => {
   const userIdNumber = Number(userId);
 
   const existingUser = await User.isUserExist(userIdNumber);
@@ -55,12 +55,12 @@ export async function deleteUser(userId: string): Promise<TUser | null> {
     const deletedUser = await User.findOneAndDelete({ userId: userId });
     return deletedUser;
   }
-}
+};
 
-export async function addOrder(
+export const addOrder = async (
   userId: string,
   orderData: TOrder,
-): Promise<TUser | null> {
+): Promise<TUser | null> => {
   const userIdNumber = Number(userId);
 
   const existingUser = await User.isUserExist(userIdNumber);
@@ -75,9 +75,9 @@ export async function addOrder(
     );
     return updatedUser;
   }
-}
+};
 
-export async function getOrders(userId: string): Promise<TOrder[] | null> {
+export const getOrders = async (userId: string): Promise<TOrder[] | null> => {
   const userIdNumber = Number(userId);
 
   const existingUser = await User.isUserExist(userIdNumber);
@@ -88,9 +88,9 @@ export async function getOrders(userId: string): Promise<TOrder[] | null> {
     const user = await User.findOne({ userId: userId });
     return user?.orders || null;
   }
-}
+};
 
-export async function calculateTotalPrice(userId: string): Promise<number> {
+export const calculateTotalPrice = async (userId: string): Promise<number> => {
   const userIdNumber = Number(userId);
 
   const existingUser = await User.isUserExist(userIdNumber);
@@ -104,4 +104,4 @@ export async function calculateTotalPrice(userId: string): Promise<number> {
     }, 0);
     return totalPrice || 0;
   }
-}
+};

@@ -12,7 +12,7 @@ const addressValidation = z.object({
 });
 
 const orderValidation = z.object({
-  productName: z.string().min(1, { message: 'Product must be a string' }),
+  productName: z.string().min(1, { message: 'Product name is required' }),
   price: z.number().min(0, { message: 'Price must be greater than 0' }),
   quantity: z.number().min(1, { message: 'Quantity must be greater than 0' }),
 });
@@ -20,14 +20,16 @@ const orderValidation = z.object({
 const userValidation = z.object({
   userId: z.number().min(1, { message: 'User ID must be greater than 0' }),
   username: z.string().min(1, { message: 'Username is required' }),
-  password: z.string().min(1, { message: 'Password is required' }),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters long' }),
   fullName: fullNameValidation,
-  age: z.number().min(1, { message: 'Age must be greater than 0' }),
-  email: z.string().email({ message: 'Invalid email' }),
+  age: z.number().min(0, { message: 'Age must be greater than or equal to 0' }),
+  email: z.string().email({ message: 'Invalid email format' }),
   isActive: z.boolean(),
   hobbies: z.array(z.string().min(1, { message: 'Hobby is required' })),
   address: addressValidation,
-  orders: z.array(orderValidation).optional(),
+  orders: z.array(orderValidation),
 });
 
 export default userValidation;
