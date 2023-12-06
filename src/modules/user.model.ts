@@ -9,35 +9,26 @@ import {
 import bcrypt from 'bcrypt';
 import config from '../app/config';
 
-const fullNameSchema: Schema<TFullName> = new Schema({
+const fullNameSchema = new Schema<TFullName>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
 });
 
-const addressSchema: Schema<TAddress> = new Schema({
+const addressSchema = new Schema<TAddress>({
   street: { type: String, required: true },
   city: { type: String, required: true },
   country: { type: String, required: true },
 });
 
-const orderSchema: Schema<TOrder> = new Schema({
+const orderSchema = new Schema<TOrder>({
   productName: { type: String, required: true },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
 });
 
-const userSchema: Schema<TUser, UserModel> = new Schema({
-  userId: {
-    type: Number,
-    required: true,
-    unique: true,
-  },
-
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+const userSchema = new Schema<TUser, UserModel>({
+  userId: { type: Number, unique: true },
+  username: { type: String, unique: true },
 
   password: {
     type: String,
@@ -55,11 +46,7 @@ const userSchema: Schema<TUser, UserModel> = new Schema({
     required: true,
   },
 
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+  email: { type: String, unique: true },
 
   isActive: {
     type: Boolean,

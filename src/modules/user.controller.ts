@@ -143,7 +143,7 @@ export const addOrders = async (req: Request, res: Response): Promise<void> => {
     await addOrder(userId, orderData);
     res.status(200).json({
       success: true,
-      message: 'Order added successfully!',
+      message: 'Order created successfully!',
       data: null,
     });
   } catch (error: any) {
