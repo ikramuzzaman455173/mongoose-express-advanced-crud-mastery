@@ -17,7 +17,7 @@ export type TOrder = {
   quantity: number;
 };
 
-export type TUser = {
+export type IUser = {
   userId: number;
   username: string;
   password: string;
@@ -29,7 +29,7 @@ export type TUser = {
   address: TAddress;
   orders?: TOrder[];
 };
-export interface UserModel extends Model<TUser> {
+export interface UserModel extends Model<IUser> {
   // eslint-disable-next-line no-unused-vars
-  isUserExist(userId: number): Promise<TUser | null>;
+  isUserExist(userId: number): Promise<IUser | null>;
 }

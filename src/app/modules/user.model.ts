@@ -3,32 +3,39 @@ import {
   TFullName,
   TAddress,
   TOrder,
-  TUser,
+  IUser,
   UserModel,
-} from './user.interfase';
+} from './user.interface';
 import bcrypt from 'bcrypt';
-import config from '../app/config';
+import config from '../config';
 
-const fullNameSchema = new Schema<TFullName>({
+const fullNameSchema: Schema<TFullName> = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
 });
 
-const addressSchema = new Schema<TAddress>({
+const addressSchema: Schema<TAddress> = new Schema({
   street: { type: String, required: true },
   city: { type: String, required: true },
   country: { type: String, required: true },
 });
 
-const orderSchema = new Schema<TOrder>({
+const orderSchema: Schema<TOrder> = new Schema({
   productName: { type: String, required: true },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
 });
 
-const userSchema = new Schema<TUser, UserModel>({
-  userId: { type: Number, unique: true },
-  username: { type: String, unique: true },
+const userSchema: Schema<IUser, UserModel> = new Schema({
+  userId: {
+    type: Number,
+    unique: true,
+  },
+
+  username: {
+    type: String,
+    unique: true,
+  },
 
   password: {
     type: String,
@@ -46,7 +53,11 @@ const userSchema = new Schema<TUser, UserModel>({
     required: true,
   },
 
-  email: { type: String, unique: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 
   isActive: {
     type: Boolean,
@@ -69,7 +80,7 @@ const userSchema = new Schema<TUser, UserModel>({
   },
 });
 
-userSchema.pre<TUser>('save', async function (next) {
+userSchema.pre<IUser>('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   user.password = await bcrypt.hash(
@@ -87,7 +98,7 @@ userSchema.post('save', async function (doc, next) {
   next();
 });
 
-userSchema.post('find', async function (docs: TUser[], next) {
+userSchema.post('find', async function (docs: IUser[], next) {
   docs.forEach((doc) => {
     doc.orders = undefined;
   });
@@ -95,7 +106,7 @@ userSchema.post('find', async function (docs: TUser[], next) {
   next();
 });
 
-userSchema.post('findOneAndUpdate', async function (doc: TUser, next) {
+userSchema.post('findOneAndUpdate', async function (doc: IUser, next) {
   doc.orders = undefined;
 
   next();
@@ -103,9 +114,9 @@ userSchema.post('findOneAndUpdate', async function (doc: TUser, next) {
 
 userSchema.statics.isUserExist = async function (
   userId: number,
-): Promise<TUser | null> {
+): Promise<IUser | null> {
   const user = await this.findOne({ userId: userId });
   return user;
 };
 
-export const User = model<TUser, UserModel>('User', userSchema);
+export const User = model<IUser, UserModel>('User', userSchema);

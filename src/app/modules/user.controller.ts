@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import {
   addOrder,
@@ -9,8 +8,8 @@ import {
   getOrders,
   getUserById,
   updateUser,
-} from './userService';
-import userValidation from './user.validation';
+} from './user.service';
+import { validateUser } from './user.validation';
 
 export const createUsers = async (
   req: Request,
@@ -21,7 +20,7 @@ export const createUsers = async (
     if (!Array.isArray(user.hobbies)) {
       user.hobbies = [user.hobbies];
     }
-    const validatedUser = userValidation.parse(user);
+    const validatedUser = validateUser(user);
     const newUser = await createUser(validatedUser);
     res.status(201).json({
       success: true,
@@ -34,7 +33,7 @@ export const createUsers = async (
       message: 'Failed to create user!',
       error: {
         code: 400,
-        description: error,
+        description: error.message,
       },
     });
   }
@@ -57,7 +56,7 @@ export const getUsersController = async (
       message: 'Failed to fetch users!',
       error: {
         code: 400,
-        description: error,
+        description: error.message,
       },
     });
   }
@@ -81,7 +80,7 @@ export const userByIdController = async (
       message: 'Failed to fetch user!',
       error: {
         code: 400,
-        description: error,
+        description: error.message,
       },
     });
   }
@@ -94,7 +93,7 @@ export const updateAUser = async (
   try {
     const { userId } = req.params;
     const userData = req.body;
-    const validatedUser = userValidation.parse(userData);
+    const validatedUser = validateUser(userData);
     const updatedUser = await updateUser(userId, validatedUser);
     res.status(200).json({
       success: true,
@@ -107,7 +106,7 @@ export const updateAUser = async (
       message: 'Failed to fetch user!',
       error: {
         code: 400,
-        description: error,
+        description: error.message,
       },
     });
   }
@@ -131,7 +130,7 @@ export const deleteSingleUser = async (
       message: 'Failed to fetch user!',
       error: {
         code: 400,
-        description: error,
+        description: error.message,
       },
     });
   }
@@ -143,7 +142,7 @@ export const addOrders = async (req: Request, res: Response): Promise<void> => {
     await addOrder(userId, orderData);
     res.status(200).json({
       success: true,
-      message: 'Order created successfully!',
+      message: 'Order added successfully!',
       data: null,
     });
   } catch (error: any) {
@@ -152,7 +151,7 @@ export const addOrders = async (req: Request, res: Response): Promise<void> => {
       message: 'Failed to add order!',
       error: {
         code: 400,
-        description: error,
+        description: error.message,
       },
     });
   }
@@ -175,7 +174,7 @@ export const getOrdersOfUsers = async (
       message: 'Failed to fetch orders!',
       error: {
         code: 400,
-        description: error,
+        description: error.message,
       },
     });
   }
@@ -201,7 +200,7 @@ export const calculatePrice = async (
       message: 'Failed to calculate total price!',
       error: {
         code: 400,
-        description: error,
+        description: error.message,
       },
     });
   }

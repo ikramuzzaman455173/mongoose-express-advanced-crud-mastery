@@ -1,20 +1,16 @@
 import app from './app';
-import config from './app/config';
-
-// getting-started.js
 import mongoose from 'mongoose';
-
-main().catch((err) => console.log(err));
+import config from './app/config';
 
 async function main() {
   try {
     await mongoose.connect(config.database_url as string);
     app.listen(config.port, () => {
-      console.log(
-        ` The server is running on port: http://localhost:${config.port}`,
-      );
+      console.log(`Info-store Server is running on port ${config.port}.`);
     });
   } catch (error) {
-    console.log(`Something went wrong: ${error}`);
+    console.log(error);
   }
 }
+
+main();
