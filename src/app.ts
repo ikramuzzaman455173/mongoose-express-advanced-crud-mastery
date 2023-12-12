@@ -11,7 +11,9 @@ app.use('/api/users', UserRoutes);
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
   try {
-    res.send("info-store server saying 'Hello World'!");
+    res.send(
+      '<h3 align="center" style="color:#333">Advanced CRUD Mastery Server Is Running</h3>',
+    );
   } catch (error) {
     next(error);
   }
